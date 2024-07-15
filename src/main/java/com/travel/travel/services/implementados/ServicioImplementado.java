@@ -1,7 +1,7 @@
 package com.travel.travel.services.implementados;
 
 import com.travel.travel.entidades.Servicio;
-import com.travel.travel.respositorios.ServicioRepositorio;
+import com.travel.travel.repositorios.ServicioRepositorio;
 import com.travel.travel.services.interfaces.ServiceServicio;
 
 import org.springframework.beans.factory.annotation.Autowired;

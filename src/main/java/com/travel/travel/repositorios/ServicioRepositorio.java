@@ -1,4 +1,4 @@
-package com.travel.travel.respositorios;
+package com.travel.travel.repositorios;
 
 import com.travel.travel.entidades.Servicio;
 import org.springframework.data.jpa.repository.JpaRepository;

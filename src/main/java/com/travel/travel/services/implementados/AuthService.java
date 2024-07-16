@@ -38,34 +38,6 @@ public class AuthService {
     
  
 
-/*
-
-    //private final String jwtSecret = "tu_secreto_seguro_de_al_menos_32_bytes_de_longitud";
-    private final SecretKey jwtSecretKey = Keys.secretKeyFor(SignatureAlgorithm.HS512);
-    
-    private final long jwtExpirationMs = 86400000; // 24 hours
-
-    public String authenticateUser(String email, String password) {
-        try {
-          //  Usuario usuario = usuarioRepository.findByUsuEma(email)
-            //.orElseThrow(() -> new RuntimeException("Usuario no encontrado"));
-
-   // if (!passwordEncoder.matches(password, usuario.getUsuPas())) {
-     ///   throw new RuntimeException("Contraseña incorrecta");
-   // }
-            Authentication authentication = authenticationManager.authenticate(
-                new UsernamePasswordAuthenticationToken(email, password)
-            );
-            SecurityContextHolder.getContext().setAuthentication(authentication);
-            return generateToken(authentication);
-        }  catch (BadCredentialsException e) {
-        throw new RuntimeException("Invalid email or password", e);
-    } catch (Exception e) {
-        throw new RuntimeException("Error during authentication", e);
-    }
-
-    }*/
-    // Asumiendo que ahora la contraseña se guarda como un String hasheado en la base de datos
 
 private final String jwtSecret = "tu_secreto_seguro_de_al_menos_32_bytes_de_longitud";
 private final SecretKey jwtSecretKey = Keys.secretKeyFor(SignatureAlgorithm.HS512);

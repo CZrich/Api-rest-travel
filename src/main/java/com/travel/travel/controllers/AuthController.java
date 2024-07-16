@@ -32,47 +32,7 @@ public class AuthController {
         return ResponseEntity.ok(usuarioService.registrarUsuario(dto));
     }
 
-    /*
-     * @PostMapping("/register")
-     * public ResponseEntity<Usuario> registerUser(@RequestBody Usuario usuario) {
-     * return ResponseEntity.ok(usuarioService.registrarUsuario(usuario));
-     * }
-     * /* @PostMapping("/register")
-     * public ResponseEntity<Usuario> registerUser(@RequestBody Usuario
-     * userRegistrationDto) {
-     * Usuario usuario = new Usuario();
-     * usuario.setUsuEma(userRegistrationDto.getUsuEma());
-     * usuario.setUsuPas(userRegistrationDto.getUsuPas());
-     * 
-     * Usuario registeredUser = usuarioService.registrarUsuario(usuario);
-     * 
-     * if (registeredUser != null) {
-     * DatoUsuario datoUsuario = new DatoUsuario();
-     * datoUsuario.setUsuNom(userRegistrationDto.getUsuNom());
-     * datoUsuario.setUsuApePa(userRegistrationDto.getUsuApePa());
-     * datoUsuario.setUsuApeMa(userRegistrationDto.getUsuApeMa());
-     * datoUsuario.setUsuDir(userRegistrationDto.getUsuDir());
-     * datoUsuario.setUsuFecNac(userRegistrationDto.getUsuFecNac());
-     * datoUsuario.setUsuDNI(userRegistrationDto.getUsuDNI());
-     * datoUsuario.setUsuNac(userRegistrationDto.getUsuNac());
-     * datoUsuario.setUsuCel(userRegistrationDto.getUsuCel());
-     * datoUsuario.setUsuCod(registeredUser.getUsuCod());
-     * 
-     * usuarioService.registrarDatoUsuario(datoUsuario);
-     * }
-     * 
-     * return ResponseEntity.ok(registeredUser);
-     * }
-     * 
-     * //MI LOGIN ANTIGUO
-     * 
-     * @PostMapping("/login")
-     * public ResponseEntity<String> loginUser(@RequestBody Usuario usuario) {
-     * String token = authService.authenticateUser(usuario.getUsuEma(), new
-     * String(usuario.getUsuPas()));
-     * return ResponseEntity.ok(token);
-     * }
-     */
+ 
     @PostMapping("/login")
     public ResponseEntity<LoginResponseDto> loginUser(@RequestBody Usuario usuario) {
        // logger.debug("Intento de login para usuario: " + usuario.getUsuEma());

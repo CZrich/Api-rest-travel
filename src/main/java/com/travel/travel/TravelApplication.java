@@ -8,6 +8,7 @@ import org.springframework.http.ResponseEntity;
 import org.springframework.stereotype.Controller;
 import org.springframework.web.bind.annotation.GetMapping;
 import org.springframework.web.servlet.config.annotation.CorsRegistry;
+
 import org.springframework.web.servlet.config.annotation.WebMvcConfigurer;
 
 @Controller
@@ -27,6 +28,7 @@ public class TravelApplication {
 			}
 		};
 	}
+
 
 	@GetMapping("/")
 	public ResponseEntity<Object> hello() {

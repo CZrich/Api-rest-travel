@@ -9,7 +9,8 @@ import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.*;
 import org.springframework.web.multipart.MultipartFile;
 
-
+import org.slf4j.Logger;
+import org.slf4j.LoggerFactory;
 
 //import org.springframework.core.io.ByteArrayResource;
 import org.springframework.core.io.Resource;
@@ -18,7 +19,9 @@ import org.springframework.http.HttpHeaders;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.MediaType;
 import java.io.IOException;
-
+import java.nio.file.Files;
+import java.nio.file.Paths;
+import java.nio.file.Path;
 import java.util.List;
 import java.util.Date;
 @RestController
@@ -65,15 +68,21 @@ public class ServicioControlador {
         servicio.setSerCos(costo);
         servicio.setSerEstReg(estado);
 
-        Servicio nuevoServicio = serviceServicio.crearServicio(servicio);
-        int id = nuevoServicio.getSerCod();
+      
 
         try {
+            Servicio nuevoServicio = serviceServicio.crearServicio(servicio);
+            int id = nuevoServicio.getSerCod();
             serviceServicio.subirImagen(id, imagen);
             return ResponseEntity.ok(nuevoServicio);
         } catch (IOException e) {
-            System.out.println(e.getMessage());
+            System.out.println("Error al subir la imagen: " + e.getMessage());
             return ResponseEntity.status(HttpStatus.INTERNAL_SERVER_ERROR).build();
+        }catch (Exception e) {
+            // Log detallado de cualquier otro error
+            System.out.println("Error al crear el servicio: " + e.getMessage());
+            e.printStackTrace();
+            return ResponseEntity.status(HttpStatus.INTERNAL_SERVER_ERROR).body(null);
         }
     }
 
@@ -103,7 +112,61 @@ public class ServicioControlador {
             throws IOException {
         return ResponseEntity.ok(serviceServicio.subirImagen(id, imagen));
     }
+    @GetMapping("/{id}/imagen")
+public ResponseEntity<Resource> obtenerImagen(@PathVariable int id) throws IOException {
+    Servicio servicio = serviceServicio.obtenerServicioPorId(id);
+    if (servicio == null || servicio.getSerImg() == null) {
+        return ResponseEntity.notFound().build();
+    }
 
+    Path uploadDirectory = Paths.get(System.getProperty("user.dir"), "travel/src/main/resources/uploads");
+    Path imagePath = uploadDirectory.resolve(servicio.getSerImg());
+
+    if (!Files.exists(imagePath)) {
+      //  logger.error("La imagen no existe en la ruta: " + imagePath);
+      System.out.println("la imagen  no existe en:" +imagePath);
+        return ResponseEntity.notFound().build();
+    }
+
+    ByteArrayResource resource = new ByteArrayResource(Files.readAllBytes(imagePath));
+
+    String contentType = Files.probeContentType(imagePath);
+    if (contentType == null) {
+        contentType = "application/octet-stream";
+    }
+
+    return ResponseEntity.ok()
+            .contentType(MediaType.parseMediaType(contentType))
+            .body(resource);
+}
+    /*@GetMapping("/{id}/imagen")
+    public ResponseEntity<Resource> obtenerImagen(@PathVariable int id) throws IOException {
+        Servicio servicio = serviceServicio.obtenerServicioPorId(id);
+        if (servicio == null || servicio.getSerImg() == null) {
+            return ResponseEntity.notFound().build();
+        }
+    
+        // Obtiene la ruta del directorio uploads en la raíz del proyecto
+        Path uploadDirectory = Paths.get(System.getProperty("user.dir"), "src/main/resources/uploads");
+        Path imagePath = uploadDirectory.resolve(servicio.getSerImg());
+    
+        if (!Files.exists(imagePath)) {
+            return ResponseEntity.notFound().build();
+        }
+    
+        ByteArrayResource resource = new ByteArrayResource(Files.readAllBytes(imagePath));
+    
+        // Determina el tipo de contenido del archivo
+        String contentType = Files.probeContentType(imagePath);
+        if (contentType == null) {
+            contentType = "application/octet-stream";  // Tipo de contenido genérico en caso de que no se pueda determinar
+        }
+    
+        return ResponseEntity.ok()
+                .contentType(MediaType.parseMediaType(contentType))
+                .body(resource);
+    }
+/*
     @GetMapping("/{id}/imagen")
     public ResponseEntity<Resource> obtenerImagen(@PathVariable int id) {
         Servicio servicio = serviceServicio.obtenerServicioPorId(id);
@@ -114,5 +177,5 @@ public class ServicioControlador {
         headers.setContentType(MediaType.IMAGE_PNG);
         ByteArrayResource resource = new ByteArrayResource(servicio.getSerImg());
         return ResponseEntity.ok().headers(headers).body(resource);
-    }
+    }*/
 }

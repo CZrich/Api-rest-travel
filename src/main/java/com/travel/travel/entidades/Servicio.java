@@ -50,11 +50,18 @@ public class Servicio {
     @JsonAlias({"serCos,costo"})
     @Column(nullable = false)
     private double serCos;
+    /*
     @Lob
     @Column(name = "serImg", nullable = true, columnDefinition = "LONGBLOB")
     @JsonProperty("imagen")
     @JsonAlias({"serImg,imagen"})
-    private byte[] serImg;
+    private byte[] serImg;*/
+
+    @JsonProperty("imagen")
+    @JsonAlias({"serImg,imagen"})
+    private String serImg;
+   
+
 
     @JsonProperty("estado")
     @JsonAlias({"serEstReg,estado"})

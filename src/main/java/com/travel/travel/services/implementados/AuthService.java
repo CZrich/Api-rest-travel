@@ -39,7 +39,7 @@ public class AuthService {
  
 
 
-private final String jwtSecret = "tu_secreto_seguro_de_al_menos_32_bytes_de_longitud";
+//private final String jwtSecret = "tu_secreto_seguro_de_al_menos_32_bytes_de_longitud";
 private final SecretKey jwtSecretKey = Keys.secretKeyFor(SignatureAlgorithm.HS512);
 private final long jwtExpirationMs = 86400000; // 24 hours
 

@@ -9,13 +9,11 @@ import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.*;
 import org.springframework.web.multipart.MultipartFile;
 
-import org.slf4j.Logger;
-import org.slf4j.LoggerFactory;
 
 //import org.springframework.core.io.ByteArrayResource;
 import org.springframework.core.io.Resource;
 import org.springframework.format.annotation.DateTimeFormat;
-import org.springframework.http.HttpHeaders;
+//import org.springframework.http.HttpHeaders;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.MediaType;
 import java.io.IOException;
@@ -31,24 +29,7 @@ public class ServicioControlador {
 
     @Autowired
     private ServiceServicio serviceServicio;
-  /*
-    @PostMapping
-    public ResponseEntity<Servicio> crearServicio(@RequestBody Servicio servicio) {
-        
-        return ResponseEntity.ok(serviceServicio.crearServicio(servicio));
-    }
-    @PostMapping
-    public ResponseEntity<Servicio> crearServicio(@RequestBody Servicio servicio, @RequestParam("imagen") MultipartFile imagen) {
-        Servicio nuevoServicio = serviceServicio.crearServicio(servicio);
-        int id = nuevoServicio.getSerCod();
-        try{
-        serviceServicio.subirImagen(id, imagen);
-        return ResponseEntity.ok(nuevoServicio);
-        }catch(IOException e){
-            System.out.println(e.getMessage());
-        }
-        return null;
-    }*/
+
 
     @PostMapping(consumes = MediaType.MULTIPART_FORM_DATA_VALUE)
     public ResponseEntity<Servicio> crearServicio(
@@ -139,43 +120,5 @@ public ResponseEntity<Resource> obtenerImagen(@PathVariable int id) throws IOExc
             .contentType(MediaType.parseMediaType(contentType))
             .body(resource);
 }
-    /*@GetMapping("/{id}/imagen")
-    public ResponseEntity<Resource> obtenerImagen(@PathVariable int id) throws IOException {
-        Servicio servicio = serviceServicio.obtenerServicioPorId(id);
-        if (servicio == null || servicio.getSerImg() == null) {
-            return ResponseEntity.notFound().build();
-        }
-    
-        // Obtiene la ruta del directorio uploads en la raíz del proyecto
-        Path uploadDirectory = Paths.get(System.getProperty("user.dir"), "src/main/resources/uploads");
-        Path imagePath = uploadDirectory.resolve(servicio.getSerImg());
-    
-        if (!Files.exists(imagePath)) {
-            return ResponseEntity.notFound().build();
-        }
-    
-        ByteArrayResource resource = new ByteArrayResource(Files.readAllBytes(imagePath));
-    
-        // Determina el tipo de contenido del archivo
-        String contentType = Files.probeContentType(imagePath);
-        if (contentType == null) {
-            contentType = "application/octet-stream";  // Tipo de contenido genérico en caso de que no se pueda determinar
-        }
-    
-        return ResponseEntity.ok()
-                .contentType(MediaType.parseMediaType(contentType))
-                .body(resource);
-    }
-/*
-    @GetMapping("/{id}/imagen")
-    public ResponseEntity<Resource> obtenerImagen(@PathVariable int id) {
-        Servicio servicio = serviceServicio.obtenerServicioPorId(id);
-        if (servicio == null || servicio.getSerImg() == null) {
-            return ResponseEntity.notFound().build();
-        }
-        HttpHeaders headers = new HttpHeaders();
-        headers.setContentType(MediaType.IMAGE_PNG);
-        ByteArrayResource resource = new ByteArrayResource(servicio.getSerImg());
-        return ResponseEntity.ok().headers(headers).body(resource);
-    }*/
+   
 }

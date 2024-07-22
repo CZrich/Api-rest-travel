@@ -13,9 +13,11 @@ public interface ServiceServicio {
 
     Servicio obtenerServicioPorId(int id) ;
     List<Servicio> obtenerTodosLosServicios() ;
-
-     Servicio actualizarServicio(int id, Servicio detallesServicio) ;
+    Servicio actualizarServicio(int id, Servicio detallesServicio, MultipartFile imagen) throws IOException ;
+     //Servicio actualizarServicio(int id, Servicio detallesServicio) ;
+    Servicio inactivarServicio(int id);
+    Servicio activarServicio (int id);
     void eliminarServicio(int id);
 
-     Servicio subirImagen(int id, MultipartFile archivoImagen) throws IOException;;
+     Servicio subirImagen(int id, MultipartFile archivoImagen) throws IOException;
 }

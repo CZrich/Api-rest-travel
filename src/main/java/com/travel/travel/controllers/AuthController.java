@@ -10,6 +10,8 @@ import com.travel.travel.services.implementados.AuthService;
 import com.travel.travel.services.implementados.UsuarioService;
 import com.travel.travel.services.implementados.UsuariosRolesService;
 
+import java.util.Map;
+
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.*;
@@ -28,11 +30,16 @@ public class AuthController {
     @Autowired
     private UsuariosRolesService usuariosRolesService;
 
-    @PostMapping("/register")
+   @PostMapping("/register")
     public ResponseEntity<Usuario> registerUser(@RequestBody UserRegistrationDto dto) {
         return ResponseEntity.ok(usuarioService.registrarUsuario(dto));
     }
-
+    /*
+    @PostMapping("/register")
+public ResponseEntity<?> registerUser(@RequestBody UserRegistrationDto dto) {
+    usuarioService.registrarUsuario(dto);
+    return ResponseEntity.ok(Map.of("message", "User registered successfully"));
+}*/
  
     @PostMapping("/login")
     public ResponseEntity<LoginResponseDto> loginUser(@RequestBody Usuario usuario) {

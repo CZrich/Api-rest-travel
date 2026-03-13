@@ -8,7 +8,8 @@ import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 import org.springframework.web.multipart.MultipartFile;
 
-//import java.io.File;
+
+import java.io.File;
 import java.io.IOException;
 import java.nio.file.Files;
 import java.nio.file.Paths;
@@ -19,11 +20,12 @@ import java.nio.file.Path;
 
 @Service
 public class ServicioImplementado implements ServiceServicio {
-    // private static final String UPLOAD_DIR ="uploads";
+
 
     @Autowired
     private ServicioRepositorio servicioRepositorio;
-
+  //  @Autowired
+  //private  UploadFileImgService uploadFileImgService;
     @Override
     public Servicio crearServicio(Servicio servicio) {
         return servicioRepositorio.save(servicio);
@@ -40,27 +42,13 @@ public class ServicioImplementado implements ServiceServicio {
         return servicioRepositorio.findAll();
     }
 
-    /*
-     * @Override
-     * public Servicio actualizarServicio(int id, Servicio detallesServicio) {
-     * Servicio servicio = obtenerServicioPorId(id);
-     * 
-     * servicio.setSerImg(detallesServicio.getSerImg());
-     * servicio.setSerDes(detallesServicio.getSerDes());
-     * servicio.setSerNom(detallesServicio.getSerNom());
-     * servicio.setSerFec(detallesServicio.getSerFec());
-     * servicio.setSerCos(detallesServicio.getSerCos());
-     * servicio.setSerEstReg(detallesServicio.getSerEstReg());
-     * 
-     * return servicioRepositorio.save(servicio);
-     * }
-     */
+
     @Override
     public void eliminarServicio(int id) {
         Servicio servicio = obtenerServicioPorId(id);
         servicioRepositorio.delete(servicio);
     }
-
+/*
     @Override
     public Servicio actualizarServicio(int id, Servicio detallesServicio, MultipartFile imagen) throws IOException {
         Servicio servicio = obtenerServicioPorId(id);
@@ -85,6 +73,33 @@ public class ServicioImplementado implements ServiceServicio {
         }
 
         return servicioRepositorio.save(servicio);
+    }*/
+    @Override
+    public Servicio actualizarServicio(int id, Servicio detallesServicio, MultipartFile imagen) throws IOException {
+
+        Servicio servicio = obtenerServicioPorId(id);
+
+        servicio.setSerEstReg(detallesServicio.getSerEstReg());
+        servicio.setSerNom(detallesServicio.getSerNom());
+        servicio.setSerDes(detallesServicio.getSerDes());
+        servicio.setSerFec(detallesServicio.getSerFec());
+        servicio.setSerDest(detallesServicio.getSerDest());
+        servicio.setSerCos(detallesServicio.getSerCos());
+
+        if (imagen != null && !imagen.isEmpty()) {
+
+            // eliminar imagen anterior
+            if (servicio.getSerImg() != null) {
+                Path imagePath = Paths.get("uploads", servicio.getSerImg());
+                Files.deleteIfExists(imagePath);
+            }
+            //String newFilename = uploadFileImgService.copy(imagen);
+            //servicio.setSerImg(newFilename);
+            // subir nueva imagen
+           subirImagen(servicio.getSerCod(), imagen);
+        }
+
+        return servicioRepositorio.save(servicio);
     }
     @Override
     public Servicio activarServicio(int id){
@@ -105,71 +120,30 @@ public class ServicioImplementado implements ServiceServicio {
         return null;
     }
 
-    /*
-     * //Nuevo metodo agregado
-     * public Servicio subirImagen(int servicioId, MultipartFile imagen) throws
-     * IOException {
-     * if (imagen.isEmpty()) {
-     * throw new IOException("El archivo de imagen está vacío.");
-     * }
-     * 
-     * String uploadDirectory = "travel/src/main/resources/uploads/";
-     * 
-     * String originalFilename = imagen.getOriginalFilename();
-     * String fileExtension = "";
-     * 
-     * if (originalFilename != null && originalFilename.contains(".")) {
-     * fileExtension =
-     * originalFilename.substring(originalFilename.lastIndexOf("."));
-     * }
-     * 
-     * 
-     * String newFilename = UUID.randomUUID().toString() + fileExtension;
-     * Path imagePath = Paths.get(uploadDirectory, newFilename);
-     * // Path imagePath = Paths.get("src/main/resources/uploads"+newFilename);
-     * 
-     * // Crear el directorio si no existe
-     * if (!Files.exists(Paths.get(uploadDirectory))) {
-     * Files.createDirectories(Paths.get(uploadDirectory));
-     * }
-     * 
-     * // Guardar la imagen en el sistema de archivos
-     * Files.copy(imagen.getInputStream(), imagePath,
-     * StandardCopyOption.REPLACE_EXISTING);
-     * 
-     * // Actualizar la entidad Servicio con el nombre del archivo de imagen
-     * Servicio servicio = obtenerServicioPorId(servicioId);
-     * servicio.setSerImg(newFilename);
-     * return crearServicio(servicio); // O el método adecuado para actualizar el
-     * servicio en la base de datos
-     * }
-     */
+
     @Override
     public Servicio subirImagen(int servicioId, MultipartFile imagen) throws IOException {
         if (imagen.isEmpty()) {
             throw new IOException("El archivo de imagen está vacío.");
         }
 
-        String uploadDirectory = "travel/src/main/resources/uploads/";
-        String originalFilename = imagen.getOriginalFilename();
-        String fileExtension = "";
+        // Usar la misma lógica de ruta absoluta
+        String uploadDirectory = System.getProperty("user.dir") + File.separator + "uploads";
 
-        if (originalFilename != null && originalFilename.contains(".")) {
-            fileExtension = originalFilename.substring(originalFilename.lastIndexOf("."));
-        }
+        String originalFilename = imagen.getOriginalFilename();
+        String fileExtension = (originalFilename != null && originalFilename.contains("."))
+                ? originalFilename.substring(originalFilename.lastIndexOf(".")) : "";
 
         String newFilename = UUID.randomUUID().toString() + fileExtension;
-        Path imagePath = Paths.get(uploadDirectory, newFilename);
+        Path imagePath = Paths.get(uploadDirectory).resolve(newFilename);
 
         // Crear el directorio si no existe
-        if (!Files.exists(Paths.get(uploadDirectory))) {
-            Files.createDirectories(Paths.get(uploadDirectory));
-        }
+        Files.createDirectories(imagePath.getParent());
 
-        // Guardar la imagen en el sistema de archivos
+        // Guardar físicamente
         Files.copy(imagen.getInputStream(), imagePath, StandardCopyOption.REPLACE_EXISTING);
 
-        // Actualizar la entidad Servicio con el nombre del archivo de imagen
+        // Actualizar base de datos
         Servicio servicio = obtenerServicioPorId(servicioId);
         servicio.setSerImg(newFilename);
         return servicioRepositorio.save(servicio);

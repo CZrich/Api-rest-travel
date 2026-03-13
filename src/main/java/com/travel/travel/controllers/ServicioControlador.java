@@ -5,6 +5,7 @@ import com.travel.travel.services.interfaces.ServiceServicio;
 
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.core.io.ByteArrayResource;
+import org.springframework.core.io.UrlResource;
 import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.*;
 import org.springframework.web.multipart.MultipartFile;
@@ -29,7 +30,7 @@ public class ServicioControlador {
 
     @Autowired
     private ServiceServicio serviceServicio;
-
+    private final Path uploadDirectory = Paths.get("uploads").toAbsolutePath();
     @PostMapping(consumes = MediaType.MULTIPART_FORM_DATA_VALUE)
     public ResponseEntity<Servicio> crearServicio(
             //@RequestParam("estado") String estado,
@@ -134,7 +135,7 @@ public class ServicioControlador {
             throws IOException {
         return ResponseEntity.ok(serviceServicio.subirImagen(id, imagen));
     }
-
+/*
     @GetMapping("/{id}/imagen")
     public ResponseEntity<Resource> obtenerImagen(@PathVariable int id) throws IOException {
         Servicio servicio = serviceServicio.obtenerServicioPorId(id);
@@ -152,6 +153,33 @@ public class ServicioControlador {
         }
 
         ByteArrayResource resource = new ByteArrayResource(Files.readAllBytes(imagePath));
+
+        String contentType = Files.probeContentType(imagePath);
+        if (contentType == null) {
+            contentType = "application/octet-stream";
+        }
+
+        return ResponseEntity.ok()
+                .contentType(MediaType.parseMediaType(contentType))
+                .body(resource);
+    }*/
+    @GetMapping("/{id}/imagen")
+    public ResponseEntity<Resource> obtenerImagen(@PathVariable int id) throws IOException {
+
+        Servicio servicio = serviceServicio.obtenerServicioPorId(id);
+
+        if (servicio == null || servicio.getSerImg() == null) {
+            return ResponseEntity.notFound().build();
+        }
+
+        Path imagePath = uploadDirectory.resolve(servicio.getSerImg());
+
+        if (!Files.exists(imagePath)) {
+            System.out.println("Imagen no encontrada en: " + imagePath);
+            return ResponseEntity.notFound().build();
+        }
+
+        Resource resource = new UrlResource(imagePath.toUri());
 
         String contentType = Files.probeContentType(imagePath);
         if (contentType == null) {

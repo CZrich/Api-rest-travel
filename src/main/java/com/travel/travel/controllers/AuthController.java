@@ -43,8 +43,7 @@ public ResponseEntity<?> registerUser(@RequestBody UserRegistrationDto dto) {
  
     @PostMapping("/login")
     public ResponseEntity<LoginResponseDto> loginUser(@RequestBody Usuario usuario) {
-       // logger.debug("Intento de login para usuario: " + usuario.getUsuEma());
-        //String token = authService.authenticateUser(usuario.getUsuEma(), new String(usuario.getUsuPas()));
+
         String token = authService.authenticateUser(usuario.getUsuEma(), usuario.getUsuPas());
         Usuario currentUser = authService.getCurrentUser();
         UsuariosRoles usuariosRoles=usuariosRolesService.getByUser(currentUser);

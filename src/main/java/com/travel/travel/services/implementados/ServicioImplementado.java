@@ -48,32 +48,7 @@ public class ServicioImplementado implements ServiceServicio {
         Servicio servicio = obtenerServicioPorId(id);
         servicioRepositorio.delete(servicio);
     }
-/*
-    @Override
-    public Servicio actualizarServicio(int id, Servicio detallesServicio, MultipartFile imagen) throws IOException {
-        Servicio servicio = obtenerServicioPorId(id);
 
-        servicio.setSerEstReg(detallesServicio.getSerEstReg());
-        servicio.setSerNom(detallesServicio.getSerNom());
-        servicio.setSerDes(detallesServicio.getSerDes());
-        servicio.setSerFec(detallesServicio.getSerFec());
-        servicio.setSerDest(detallesServicio.getSerDest());
-        servicio.setSerCos(detallesServicio.getSerCos());
-
-        if (imagen != null && !imagen.isEmpty()) {
-            // Eliminar la imagen anterior si existe
-            if (servicio.getSerImg() != null) {
-                Path imagePath = Paths.get("travel/src/main/resources/uploads/", servicio.getSerImg());
-                Files.deleteIfExists(imagePath);
-            }
-
-            // Subir la nueva imagen
-             subirImagen(servicio.getSerCod(), imagen);
-           // servicio.setSerImg(newFilename);
-        }
-
-        return servicioRepositorio.save(servicio);
-    }*/
     @Override
     public Servicio actualizarServicio(int id, Servicio detallesServicio, MultipartFile imagen) throws IOException {
 
